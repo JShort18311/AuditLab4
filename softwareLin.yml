@@ -1,0 +1,8 @@
+- name: Query information on installed software
+  hosts: all
+
+  tasks:
+    - name: Query installed application software
+      command: osqueryi "SELECT name, version FROM deb_packages;"
+      register: app_software
+    - debug: var=app_software.stdout_lines

@@ -1,0 +1,18 @@
+- name: Instal OSQuery from repository
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Add osquery key
+      apt_key:
+        keyserver: hkp://keyserver.ubuntu.com:80
+        id: 1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B
+
+    - name: Add apt repository
+      apt_repository:
+        repo: deb [arch=amd64] https://pkg.osquery.io/deb deb main
+
+    - name: Install OSQuery
+      apt:
+        update_cache: yes
+        name: osquery

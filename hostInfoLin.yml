@@ -1,0 +1,23 @@
+- name: Query basic host information
+  hosts: all
+
+  tasks:
+    - name: Query hostname
+      command: osqueryi "SELECT hostname FROM system_info;"
+      register: hostname
+    - debug: var=hostname.stdout_lines
+
+    - name: Query OS and OS patch level
+      command: osqueryi "SELECT name AS OS, version FROM os_version;"
+      register: os_info
+    - debug: var=os_info.stdout_lines
+
+    - name: Query IP information
+      command: osqueryi "SELECT interface, address, mask, type FROM interface_addresses;"
+      register: ip_info
+    - debug: var=ip_info.stdout_lines
+
+    - name: Query local users
+      command: osqueryi "SELECT username FROM users;"
+      register: users
+    - debug: var=users.stdout_lines
