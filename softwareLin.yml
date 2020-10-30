@@ -6,3 +6,8 @@
       command: osqueryi "SELECT name, version FROM deb_packages;"
       register: app_software
     - debug: var=app_software.stdout_lines
+
+    - name: Query software to run on boot(services)
+      command: osqueryi "SELECT name FROM etc_services"
+      register: services
+    - debug: var=services.stdout_lines
