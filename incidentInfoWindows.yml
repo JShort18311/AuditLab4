@@ -1,0 +1,27 @@
+---
+- name: Query Information Relevant to Incident Response
+  hosts: all
+  
+  vars:
+    ansible_port: 5986
+    ansible_user: student
+    ansible_password: student
+    ansible_connection: winrm
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_transport: basic
+
+  tasks:
+    - name: Query Recent Logons
+      win_command: osqueryi "SELECT * FROM logon_sessions WHERE logon_time AS 'logon time' > (SELECT unix_time FROM time)-43200;"
+      register: output
+    - debug: var=output.stdout_lines
+
+    - name: Query Process Info
+      win_command: osqueryi "SELECT pid, name, parent, path, on_disk as 'on disk', total_size as 'total size', user_time as 'user time', system_time AS 'system time' FROM processes;"
+      register: output
+    - debug: var=output.stdout_lines
+
+    - name: Query Outbound Connections (not port 80 or 443)
+      win_command: osqueryi "SELECT * FROM process_open_sockets WHERE local_address NOT IN ('', '::', '0.0.0.0') AND remote_port NOT IN (80, 443);"
+      register: output
+    - debug: var=output.stdout_lines

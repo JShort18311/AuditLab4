@@ -1,0 +1,17 @@
+---
+- name: Install OSQuery from Repository
+  hosts: all
+  
+  vars:
+    ansible_port: 5986
+    ansible_user: student
+    ansible_password: student
+    ansible_connection: winrm
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_transport: basic
+  
+  tasks:
+    - name: Install OSQuery
+      chocolatey.chocolatey.win_chocolatey:
+        name: osquery
+        state: present

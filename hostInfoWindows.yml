@@ -1,0 +1,32 @@
+---
+- name: Query Basic Host Information
+  hosts: all
+  
+  vars:
+    ansible_port: 5986
+    ansible_user: student
+    ansible_password: student
+    ansible_connection: winrm
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_transport: basic
+  
+  tasks:
+    - name: Query Hostname
+      win_command: osqueryi "SELECT hostname FROM system_info;"
+      register: output
+    - debug: var=output.stdout_lines
+
+    - name: Query OS and OS Patch Level
+      win_command: osqueryi "SELECT name AS OS, version FROM os_version;"
+      register: output
+    - debug: var=output.stdout_lines
+
+    - name: Query IP Information
+      win_command: osqueryi "SELECT interface, address, mask, type FROM interface_addresses;"
+      register: output
+    - debug: var=output.stdout_lines
+
+    - name: Query Local Users
+      win_command: osqueryi "SELECT username FROM users;"
+      register: output
+    - debug: var=output.stdout_lines

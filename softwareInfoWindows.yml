@@ -1,0 +1,22 @@
+---
+- name: Query Installed Software
+  hosts: all
+  
+  vars:
+    ansible_port: 5986
+    ansible_user: student
+    ansible_password: student
+    ansible_connection: winrm
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_transport: basic
+
+  tasks:
+    - name: Query Installed Application Software
+      win_command: osqueryi "SELECT name, version FROM programs;"
+      register: output
+    - debug: var=output.stdout_lines
+
+    - name: Query Software To Run On Boot
+      win_command: osqueryi "SELECT name FROM autoexec"
+      register: output
+    - debug: var=output.stdout_lines
